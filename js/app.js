@@ -24,12 +24,20 @@ window.addEventListener('load', () => {
 })
 
 // Función para consultar las criptomonedas
-function consultarCriptomonedas() {
+async function consultarCriptomonedas() {
     const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD';
 
-    fetch(url)
-        .then(respuesta => respuesta.json())
-        .then(resultado => selectCriptomonedas(resultado.Data))
+    // fetch(url)
+    //     .then(respuesta => respuesta.json())
+    //     .then(resultado => selectCriptomonedas(resultado.Data))
+
+    try {
+        const respuesta = await fetch(url);
+        const resultado = await respuesta.json();
+        selectCriptomonedas(resultado.Data);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // Función para llenar el select de criptomonedas
@@ -67,7 +75,7 @@ function submitFormulario(e) {
 }
 
 // Función para consultar la API
-function consultarAPI() {
+async function consultarAPI() {
     const { moneda, criptomoneda } = objBusqueda;
 
     const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
@@ -75,14 +83,24 @@ function consultarAPI() {
     // Mostrar el spinner antes de hacer la petición
     mostrarSpinner();
 
-    fetch(url)
-        .then(respuesta => respuesta.json())
-        .then(resultado => {
-            // Mostrar el resultado después de un retraso de 2 segundos
-            setTimeout(() => {
-                mostrarCotizacionHTML(resultado.DISPLAY[criptomoneda][moneda])
-            }, 2000)
-        })
+    // fetch(url)
+    //     .then(respuesta => respuesta.json())
+    //     .then(resultado => {
+    //         // Mostrar el resultado después de un retraso de 2 segundos
+    //         setTimeout(() => {
+    //             mostrarCotizacionHTML(resultado.DISPLAY[criptomoneda][moneda])
+    //         }, 2000)
+    //     })
+
+    try {
+        const respuesta = await fetch(url);
+        const resultado = await respuesta.json();
+        setTimeout(() => {
+            mostrarCotizacionHTML(resultado.DISPLAY[criptomoneda][moneda])
+        }, 2000)
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // Función para mostrar la cotización en el HTML
